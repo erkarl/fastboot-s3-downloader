@@ -26,6 +26,7 @@ class S3Downloader {
     this.ui = options.ui;
     this.configBucket = options.bucket;
     this.configKey = options.key;
+    this.downloadComplete = options.downloadComplete;
   }
 
   download() {
@@ -39,6 +40,7 @@ class S3Downloader {
       .then(() => this.downloadAppZip())
       .then(() => this.unzipApp())
       .then(() => this.installNPMDependencies())
+      .then(() => this.downloadComplete())
       .then(() => this.outputPath);
   }
 
@@ -46,7 +48,7 @@ class S3Downloader {
     if (!this.outputPath) {
       return Promise.resolve();
     }
-    
+
     this.ui.writeLine('removing ' + this.outputPath);
     return fsp.remove(this.outputPath);
   }
